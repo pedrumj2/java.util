@@ -10,8 +10,24 @@ import static org.junit.Assert.*;
 public class ConfigTest {
 
     @Test
-    public void test() throws IOException {
+    public void firstRow() throws IOException {
         Config _config = new Config("config.txt");
+        assertEquals(_config.getValue("key1"), "value1");
     }
+
+    @Test
+    public void nullRow() throws IOException {
+        Config _config = new Config("config.txt");
+        assertEquals(_config.getValue("key3"), null);
+    }
+
+    @Test
+    public void lastRow() throws IOException {
+        Config _config = new Config("config.txt");
+        assertEquals(_config.getValue("key2"), "value2");
+    }
+
+
+
 
 }

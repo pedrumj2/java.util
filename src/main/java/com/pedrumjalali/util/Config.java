@@ -5,29 +5,35 @@ import javafx.util.Pair;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Config {
+    private HashMap<String, String> keyValues;
     public Config(String __fileName) throws IOException {
         BufferedReader _is = getFileInputStream(__fileName);
         List<String> _lines = getLines(_is);
-        List<Pair<String, String>> _keyValues = getKeyValues(_lines);
-
+        keyValues = getKeyValues(_lines);
         int x = 3;
     }
+
+    public String getValue(String __key){
+        return keyValues.get(__key);
+    }
+
     private BufferedReader getFileInputStream(String __fileName){
         ClassLoader _classloader = Thread.currentThread().getContextClassLoader();
         BufferedReader _is = new BufferedReader( new InputStreamReader(_classloader.getResourceAsStream(__fileName)));
         return _is;
     }
 
-    private List<Pair<String, String>> getKeyValues(List<String> __input){
+    private HashMap<String, String> getKeyValues(List<String> __input){
         Pair<String, String> _linePair;
-        List<Pair<String, String>> _output = new ArrayList<Pair<String, String>>();
+        HashMap<String, String> _output = new HashMap<String, String>();
         for (int i =0 ; i < __input.size();i++){
             _linePair = getKeyValue(__input.get(i));
             if (_linePair != null){
-                _output.add(_linePair);
+                _output.put(_linePair.getKey(), _linePair.getValue());
             }
         }
         return _output;
@@ -45,8 +51,8 @@ public class Config {
         else{
             return null;
         }
-
     }
+
     private List<String> getLines(BufferedReader __inputStream) throws IOException {
         String _line;
         List<String> _output =new ArrayList<String>();
