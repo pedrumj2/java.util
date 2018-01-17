@@ -1,6 +1,5 @@
 package com.pedrumjalali.util;
 
-import com.sun.scenario.effect.impl.sw.java.JSWBlend_SRC_OUTPeer;
 import javafx.util.Pair;
 
 import java.io.*;
@@ -10,11 +9,30 @@ import java.util.List;
 
 public class Config {
     private HashMap<String, String> keyValues;
-    public Config(String __fileName) throws IOException {
-        BufferedReader _is = getFileInputStream(__fileName);
-        List<String> _lines = getLines(_is);
-        keyValues = getKeyValues(_lines);
-        int x = 3;
+    public boolean success = false;
+    public Config(String __fileName) {
+        try{
+            BufferedReader _is = getFileInputStream(__fileName);
+            List<String> _lines = getLines(_is);
+            keyValues = getKeyValues(_lines);
+            success =true;
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+
+    }
+
+    public Config(String __fileName, String __directory)  {
+        BufferedReader _is = null;
+        try {
+            _is = getFileInputStream(__fileName, __directory);
+            List<String> _lines = getLines(_is);
+            keyValues = getKeyValues(_lines);
+            success = true;
+        } catch (Exception __e) {
+            __e.printStackTrace();
+        }
     }
 
     public String getValue(String __key){
@@ -24,6 +42,13 @@ public class Config {
     private BufferedReader getFileInputStream(String __fileName){
         ClassLoader _classloader = Thread.currentThread().getContextClassLoader();
         BufferedReader _is = new BufferedReader( new InputStreamReader(_classloader.getResourceAsStream(__fileName)));
+        return _is;
+    }
+
+    private BufferedReader getFileInputStream(String __fileName, String __directory) throws FileNotFoundException {
+
+        BufferedReader _is = new BufferedReader(
+                new InputStreamReader(new FileInputStream(__directory + "/"  + __fileName)));
         return _is;
     }
 
